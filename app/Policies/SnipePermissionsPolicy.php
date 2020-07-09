@@ -4,6 +4,7 @@ namespace App\Policies;
 use App\Models\Company;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Support\Facades\Log;
 
 /**
  * SnipePermissionsPolicy provides methods for handling the granular permissions used throughout Snipe-IT.

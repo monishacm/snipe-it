@@ -37,7 +37,4 @@ class DepreciationsTransformer
 
         return $array;
     }
-
-
-
 }

@@ -19,12 +19,12 @@
 <div class="row">
   <div class="col-md-9">
     <!-- Horizontal Form -->
-        @if ($field->id)
-          {{ Form::open(['route' => ['fields.update', $field->id], 'class'=>'form-horizontal']) }}
-          {{ method_field('PUT') }}
-        @else
-          {{ Form::open(['route' => 'fields.store', 'class'=>'form-horizontal']) }}
-        @endif
+    @if ($field != null && $field->id != null)
+      {{ Form::open(['route' => ['fields.update', $field->id], 'class'=>'form-horizontal']) }}
+      {{ method_field('PUT') }}
+    @else
+      {{ Form::open(['route' => 'fields.store', 'class'=>'form-horizontal']) }}
+    @endif
 
     <div class="box box-default">
       <div class="box-body">
@@ -34,7 +34,7 @@
               {{ trans('admin/custom_fields/general.field_name') }}
             </label>
             <div class="col-md-6 required">
-                {{ Form::text('name', Input::old('name', $field->name), array('class' => 'form-control', 'aria-label'=>'name')) }}
+                {{ Form::text('name', request()->old('name', $field->name), array('class' => 'form-control', 'aria-label'=>'name')) }}
                 {!! $errors->first('name', '<span class="alert-msg" aria-hidden="true"><i class="fa fa-times" aria-hidden="true"></i> :message</span>') !!}
             </div>
           </div>
@@ -46,7 +46,7 @@
             </label>
             <div class="col-md-6 required">
 
-            {!! Form::customfield_elements('element', Input::old('element', $field->element), 'field_element select2 form-control') !!}
+            {!! Form::customfield_elements('element', request()->old('element', $field->element), 'field_element select2 form-control') !!}
             {!! $errors->first('element', '<span class="alert-msg" aria-hidden="true"><i class="fa fa-times" aria-hidden="true"></i> :message</span>') !!}
 
             </div>
@@ -58,7 +58,7 @@
               {{ trans('admin/custom_fields/general.field_values') }}
             </label>
             <div class="col-md-6 required">
-              {!! Form::textarea('field_values', Input::old('name', $field->field_values), ['style' => 'width: 100%', 'rows' => 4, 'class' => 'form-control', 'aria-label'=>'field_values']) !!}
+              {!! Form::textarea('field_values', request()->old('name', $field->field_values), ['style' => 'width: 100%', 'rows' => 4, 'class' => 'form-control', 'aria-label'=>'field_values']) !!}
               {!! $errors->first('field_values', '<span class="alert-msg" aria-hidden="true"><i class="fa fa-times" aria-hidden="true"></i> :message</span>') !!}
               <p class="help-block">{{ trans('admin/custom_fields/general.field_values_help') }}</p>
             </div>
@@ -82,7 +82,7 @@
             </label>
             <div class="col-md-6 required">
 
-                {{ Form::text('custom_format', Input::old('custom_format', (($field->format!='') && (stripos($field->format,'regex')===0)) ? $field->format : ''), array('class' => 'form-control', 'id' => 'custom_format','aria-label'=>'custom_format', 'placeholder'=>'regex:/^[0-9]{15}$/')) }}
+                {{ Form::text('custom_format', request()->old('custom_format', (($field->format!='') && (stripos($field->format,'regex')===0)) ? $field->format : ''), array('class' => 'form-control', 'id' => 'custom_format','aria-label'=>'custom_format', 'placeholder'=>'regex:/^[0-9]{15}$/')) }}
                 <p class="help-block">{!! trans('admin/custom_fields/general.field_custom_format_help') !!}</p>
 
               {!! $errors->first('custom_format', '<span class="alert-msg" aria-hidden="true"><i class="fa fa-times" aria-hidden="true"></i> :message</span>') !!}
@@ -96,7 +96,7 @@
                   Help Text
               </label>
               <div class="col-md-6">
-                  {{ Form::text('help_text', Input::old('help_text', $field->help_text), array('class' => 'form-control', 'aria-label'=>'help_text')) }}
+                  {{ Form::text('help_text', request()->old('help_text', $field->help_text), array('class' => 'form-control', 'aria-label'=>'help_text')) }}
                   <p class="help-block">This is optional text that will appear below the form elements while editing an asset to provide context on the field.</p>
                   {!! $errors->first('help_text', '<span class="alert-msg" aria-hidden="true"><i class="fa fa-times" aria-hidden="true"></i> :message</span>') !!}
               </div>
@@ -106,24 +106,18 @@
           <div class="form-group {{ $errors->has('show_in_email') ? ' has-error' : '' }}"  id="show_in_email">
               <div class="col-md-8 col-md-offset-4">
                   <label for="show_in_email">
-                      <input type="checkbox" name="show_in_email" aria-label="show_in_email" value="1" class="minimal"{{ (Input::old('show_in_email') || $field->show_in_email) ? ' checked="checked"' : '' }}>
+                      <input type="checkbox" name="show_in_email" aria-label="show_in_email" value="1" class="minimal"{{ (request()->old('show_in_email') || $field->show_in_email) ? ' checked="checked"' : '' }}>
                       {{ trans('admin/custom_fields/general.show_in_email') }}
                   </label>
               </div>
-
           </div>
-
-
-      @if (!$field->id)
-
-
-
-
+          
+      	  @if (!$field->id)
           <!-- Encrypted  -->
           <div class="form-group {{ $errors->has('encrypted') ? ' has-error' : '' }}">
             <div class="col-md-8 col-md-offset-4">
               <label for="field_encrypted">
-                <input type="checkbox" value="1" name="field_encrypted" id="field_encrypted" class="minimal"{{ (Input::old('field_encrypted') || $field->field_encrypted) ? ' checked="checked"' : '' }}>
+                <input type="checkbox" value="1" name="field_encrypted" id="field_encrypted" class="minimal"{{ (request()->old('field_encrypted') || $field->field_encrypted) ? ' checked="checked"' : '' }}>
                 {{ trans('admin/custom_fields/general.encrypt_field') }}
               </label>
             </div>
@@ -135,8 +129,6 @@
             </div>
           </div>
           @endif
-
-
       </div> <!-- /.box-body-->
       <div class="box-footer text-right">
         <button type="submit" class="btn btn-primary"> {{ trans('general.save') }}</button>

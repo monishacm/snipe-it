@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 use App\Helpers\Helper;
 use Image;
 use App\Models\AssetMaintenance;
-use Input;
 use Lang;
 use App\Models\Supplier;
 use Redirect;

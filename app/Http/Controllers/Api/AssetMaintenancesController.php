@@ -11,7 +11,6 @@ use Auth;
 use Carbon\Carbon;
 use Gate;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
 
 /**
  * This controller handles all actions related to Asset Maintenance for
@@ -36,7 +35,7 @@ class AssetMaintenancesController extends Controller
     {
         $maintenances = AssetMaintenance::with('asset', 'supplier', 'asset.company', 'admin');
 
-        if (Input::has('search')) {
+        if ($request->has('search')) {
             $maintenances = $maintenances->TextSearch(e($request->input('search')));
         }
 
@@ -65,8 +64,8 @@ class AssetMaintenancesController extends Controller
                                 'asset_name',
                                 'user_id'
                             ];
-        $order = Input::get('order') === 'asc' ? 'asc' : 'desc';
-        $sort = in_array(Input::get('sort'), $allowed_columns) ? e($request->input('sort')) : 'created_at';
+        $order = $request->input('order') === 'asc' ? 'asc' : 'desc';
+        $sort = in_array($request->input('sort'), $allowed_columns) ? e($request->input('sort')) : 'created_at';
 
         switch ($sort) {
             case 'user_id':

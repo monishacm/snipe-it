@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Helpers\Helper;
 use App\Models\Group;
 use App\Http\Transformers\GroupsTransformer;
+use Illuminate\Support\Facades\Log;
 
 class GroupsController extends Controller
 {

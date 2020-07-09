@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 use View;
 use App\Models\CustomFieldset;
 use App\Models\CustomField;
-use Input;
 use Validator;
 use Redirect;
 use App\Models\AssetModel;

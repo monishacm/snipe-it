@@ -3,7 +3,7 @@
     'updateText' => trans('admin/companies/table.update'),
     'helpTitle' => trans('admin/companies/general.about_companies_title'),
     'helpText' => trans('admin/companies/general.about_companies_text'),
-    'formAction' => ($item) ? route('companies.update', ['company' => $item->id]) : route('companies.store'),
+    'formAction' => ($item != null && $item->id != null) ? route('companies.update', ['company' => $item->id]) : route('companies.store'),
 ])
 
 {{-- Page content --}}

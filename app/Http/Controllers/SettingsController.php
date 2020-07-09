@@ -2,7 +2,6 @@
 namespace App\Http\Controllers;
 
 use enshrined\svgSanitize\Sanitizer;
-use Input;
 use Lang;
 use Illuminate\Http\Request;
 use App\Models\Setting;
@@ -187,7 +186,7 @@ class SettingsController extends Controller
             Auth::login($user, true);
             $settings->save();
 
-            if (Input::get('email_creds')=='1') {
+            if ($request->input('email_creds')=='1') {
                 $data = array();
                 $data['email'] = $user->email;
                 $data['username'] = $user->username;
@@ -351,7 +350,7 @@ class SettingsController extends Controller
         $setting->thumbnail_max_h = $request->input('thumbnail_max_h');
         $setting->privacy_policy_link = $request->input('privacy_policy_link');
 
-        if (Input::get('per_page')!='') {
+        if ($request->input('per_page')!='') {
             $setting->per_page = $request->input('per_page');
         } else {
             $setting->per_page = 200;
@@ -887,7 +886,7 @@ class SettingsController extends Controller
         $setting->ldap_server = $request->input('ldap_server');
         $setting->ldap_server_cert_ignore = $request->input('ldap_server_cert_ignore', false);
         $setting->ldap_uname = $request->input('ldap_uname');
-        if (Input::filled('ldap_pword')) {
+        if ($request->filled('ldap_pword')) {
             $setting->ldap_pword = Crypt::encrypt($request->input('ldap_pword'));
         }
         $setting->ldap_basedn = $request->input('ldap_basedn');
@@ -986,12 +985,8 @@ class SettingsController extends Controller
             }
             return redirect()->route("settings.backups.index")->with('error', $formatted_output);
 
-            }
+        }
         return redirect()->route("settings.backups.index")->with('error', trans('general.feature_disabled'));
-
-
-
-
     }
 
 
@@ -1068,10 +1063,10 @@ class SettingsController extends Controller
     * @since [v3.0]
     * @return View
     */
-    public function postPurge()
+    public function postPurge(Request $request)
     {
         if (!config('app.lock_passwords')) {
-            if (Input::get('confirm_purge')=='DELETE') {
+            if ($request->input('confirm_purge')=='DELETE') {
                 // Run a backup immediately before processing
                 Artisan::call('backup:run');
                 Artisan::call('snipeit:purge', ['--force'=>'true','--no-interaction'=>true]);

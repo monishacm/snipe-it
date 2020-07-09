@@ -25,13 +25,13 @@
                     data-toolbar="#toolbar"
                     class="table table-striped snipe-table"
                     id="table"
-                    data-url="{{route('api.assets.index', array(''=>e(Input::get('status')),'order_number'=>e(Input::get('order_number')), 'status_id'=>e(Input::get('status_id')), 'report'=>'true'))}}"
+                    data-url="{{route('api.assets.index', array(''=>e(request('status')),'order_number'=>e(request('order_number')), 'status_id'=>e(request('status_id')), 'report'=>'true'))}}"
                     data-cookie="true"
                     data-click-to-select="true"
-                    data-cookie-id-table="{{ e(Input::get('status')) }}assetTable-{{ config('version.hash_version') }}">
+                    data-cookie-id-table="{{ e(request('status')) }}assetTable-{{ config('version.hash_version') }}">
                         <thead>
                             <tr>
-                                @if (Input::get('status')!='Deleted')
+                                @if (request('status')!='Deleted')
                                 <th data-class="hidden-xs" data-switchable="false" data-searchable="false" data-sortable="false" data-field="checkbox"><div class="text-center"><input type="checkbox" id="checkAll" style="padding-left: 0px;"></div></th>
                                 @endif
                                 <th data-sortable="true" data-field="id" data-visible="false">{{ trans('general.id') }}</th>

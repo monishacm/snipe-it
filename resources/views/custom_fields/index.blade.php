@@ -47,38 +47,37 @@
               <th>Actions</th>
             </tr>
           </thead>
-
-          @if(isset($custom_fieldsets))
           <tbody>
-            @foreach($custom_fieldsets AS $fieldset)
-            <tr>
-              <td>
-                {{ link_to_route("fieldsets.show",$fieldset->name,['id' => $fieldset->id]) }}
-              </td>
-              <td>
-                {{ $fieldset->fields->count() }}
-              </td>
-              <td>
-                @foreach($fieldset->models as $model)
-                  <a href="{{ route('models.show', $model->id) }}" class="label label-default">{{ $model->name }}</a>
-
+          	@if (is_array($custom_fieldsets))
+                @foreach($custom_fieldsets as $fieldset)
+                <tr>
+                  <td>
+                    {{ link_to_route("fieldsets.show",$fieldset->name,['id' => $fieldset->id]) }}
+                  </td>
+                  <td>
+                    {{ $fieldset->fields->count() }}
+                  </td>
+                  <td>
+                    @foreach($fieldset->models as $model)
+                      <a href="{{ route('models.show', $model->id) }}" class="label label-default">{{ $model->name }}</a>
+    
+                    @endforeach
+                  </td>
+                  <td>
+                    @can('delete', $fieldset)
+                    {{ Form::open(['route' => array('fieldsets.destroy', $fieldset->id), 'method' => 'delete']) }}
+                      @if($fieldset->models->count() > 0)
+                      <button type="submit" class="btn btn-danger btn-sm disabled" disabled><i class="fa fa-trash"></i></button>
+                      @else
+                      <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
+                      @endif
+                    {{ Form::close() }}
+                    @endcan
+                  </td>
+                </tr>
                 @endforeach
-              </td>
-              <td>
-                @can('delete', $fieldset)
-                {{ Form::open(['route' => array('fieldsets.destroy', $fieldset->id), 'method' => 'delete']) }}
-                  @if($fieldset->models->count() > 0)
-                  <button type="submit" class="btn btn-danger btn-sm disabled" disabled><i class="fa fa-trash"></i></button>
-                  @else
-                  <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-                  @endif
-                {{ Form::close() }}
-                @endcan
-              </td>
-            </tr>
-            @endforeach
+          	@endif
           </tbody>
-          @endif
         </table>
       </div><!-- /.box-body -->
     </div><!-- /.box.box-default -->
@@ -105,7 +104,6 @@
 
       </div><!-- /.box-header -->
       <div class="box-body">
-
         <div class="table-responsive">
         <table
                 data-cookie-id-table="customFieldsTable"
@@ -136,50 +134,52 @@
             </tr>
           </thead>
           <tbody>
-            @foreach($custom_fields as $field)
-            <tr>
-              <td>{{ $field->name }}</td>
-              <td>{{ $field->help_text }}</td>
-              <td>{!! ($field->show_in_email=='1') ? '<i class="fa fa-check text-success"></i>' : '<i class="fa fa-times text-danger"></i>'  !!}</td>
-              <td>
-                 <code>{{ $field->convertUnicodeDbSlug() }}</code>
-                @if ($field->convertUnicodeDbSlug()!=$field->db_column)
-                  <br><i class="fa fa-warning text-danger"></i>WARNING. This field is in the custom fields table as <code>{{  $field->db_column }}</code> but should be <code>{{ $field->convertUnicodeDbSlug() }}</code>.
-                @endif
-              </td>
-              <td>{{ $field->format }}</td>
-              <td>{{ $field->element }}</td>
-              <td>
-                @foreach($field->fieldset as $fieldset)
-                  <a href="{{ route('fieldsets.show', $fieldset->id) }}" class="label label-default">{{ $fieldset->name }}</a>
+          	@if (is_array($custom_fields))
+                @foreach($custom_fields as $field)
+                <tr>
+                  <td>{{ $field->name }}</td>
+                  <td>{{ $field->help_text }}</td>
+                  <td>{!! ($field->show_in_email=='1') ? '<i class="fa fa-check text-success"></i>' : '<i class="fa fa-times text-danger"></i>'  !!}</td>
+                  <td>
+                     <code>{{ $field->convertUnicodeDbSlug() }}</code>
+                    @if ($field->convertUnicodeDbSlug()!=$field->db_column)
+                      <br><i class="fa fa-warning text-danger"></i>WARNING. This field is in the custom fields table as <code>{{  $field->db_column }}</code> but should be <code>{{ $field->convertUnicodeDbSlug() }}</code>.
+                    @endif
+                  </td>
+                  <td>{{ $field->format }}</td>
+                  <td>{{ $field->element }}</td>
+                  <td>
+                    @foreach($field->fieldset as $fieldset)
+                      <a href="{{ route('fieldsets.show', $fieldset->id) }}" class="label label-default">{{ $fieldset->name }}</a>
+                    @endforeach
+                  </td>
+                  <td>
+                    <nobr>
+                      @can('update', $field)
+                    <a href="{{ route('fields.edit', $field->id) }}" class="btn btn-warning btn-sm">
+                      <i class="fa fa-pencil" aria-hidden="true"></i>
+                      <span class="sr-only">Edit</span>
+                    </a>
+                    @endcan               
+                    @can('delete', $field)
+                    {{ Form::open(array('route' => array('fields.destroy', $field->id), 'method' => 'delete', 'style' => 'display:inline-block')) }}
+                    @if($field->fieldset->count()>0)
+                    <button type="submit" class="btn btn-danger btn-sm disabled" disabled>
+                      <i class="fa fa-trash" aria-hidden="true"></i>
+                      <span class="sr-only">Delete</span></button>
+                    @else
+                    <button type="submit" class="btn btn-danger btn-sm">
+                      <i class="fa fa-trash" aria-hidden="true"></i>
+                      <span class="sr-only">Delete</span>
+                    </button>
+                    @endif
+                    {{ Form::close() }}
+                    @endcan
+                    </nobr>
+                  </td>
+                </tr>
                 @endforeach
-              </td>
-              <td>
-                <nobr>
-                  @can('update', $field)
-                <a href="{{ route('fields.edit', $field->id) }}" class="btn btn-warning btn-sm">
-                  <i class="fa fa-pencil" aria-hidden="true"></i>
-                  <span class="sr-only">Edit</span>
-                </a>
-                @endcan               
-                @can('delete', $field)
-                {{ Form::open(array('route' => array('fields.destroy', $field->id), 'method' => 'delete', 'style' => 'display:inline-block')) }}
-                @if($field->fieldset->count()>0)
-                <button type="submit" class="btn btn-danger btn-sm disabled" disabled>
-                  <i class="fa fa-trash" aria-hidden="true"></i>
-                  <span class="sr-only">Delete</span></button>
-                @else
-                <button type="submit" class="btn btn-danger btn-sm">
-                  <i class="fa fa-trash" aria-hidden="true"></i>
-                  <span class="sr-only">Delete</span>
-                </button>
-                @endif
-                {{ Form::close() }}
-                @endcan
-                </nobr>
-              </td>
-            </tr>
-            @endforeach
+          	@endif
           </tbody>
         </table>
         </div>

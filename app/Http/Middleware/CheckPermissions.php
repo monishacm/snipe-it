@@ -6,6 +6,7 @@ use Closure;
 use Config;
 use Route;
 use Gate;
+use Illuminate\Support\Facades\Log;
 
 class CheckPermissions
 {
@@ -22,8 +23,6 @@ class CheckPermissions
    */
     public function handle($request, Closure $next, $section = null)
     {
-
-
         if (Gate::allows($section)) {
             return $next($request);
         }
@@ -31,9 +30,5 @@ class CheckPermissions
         return response()->view('layouts/basic', [
             'content' => view('errors/403')
         ]);
-
-
-
-
     }
 }

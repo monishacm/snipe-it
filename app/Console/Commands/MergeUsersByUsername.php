@@ -6,7 +6,6 @@ use Illuminate\Console\Command;
 use App\Models\User;
 use Carbon\Carbon;
 
-
 class MergeUsersByUsername extends Command
 {
     /**
@@ -98,12 +97,7 @@ class MergeUsersByUsername extends Command
                 $this->info( 'Marking the user as deleted');
                 $bad_user->deleted_at = Carbon::now()->timestamp;
                 $bad_user->save();
-
-
             }
-
         }
-
-
     }
 }

@@ -132,56 +132,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Logging Configuration
-    |--------------------------------------------------------------------------
-    |
-    | Here you may configure the log settings for your application. Out of
-    | the box, Laravel uses the Monolog PHP logging library. This gives
-    | you a variety of powerful log handlers / formatters to utilize.
-    |
-    | Available Settings: "single", "daily", "syslog", "errorlog"
-    |
-    */
-
-    'log' => env('APP_LOG', 'single'),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Logging Max Files
-    |--------------------------------------------------------------------------
-    |
-    | When using the daily log mode, Laravel will only retain 5
-    | days of log files by default.
-    |
-    | To change this, set the APP_LOG_MAX_FILES option in your .env.
-    |
-    */
-
-    'log_max_files' => env('APP_LOG_MAX_FILES', 5),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Logging Detail
-    |--------------------------------------------------------------------------
-    |
-    | By default, Laravel writes all log levels to storage. However, in your 
-    | production environment, you may wish to configure the minimum severity that 
-    | should be logged by editing your APP_LOG_LEVEL env config.
-    |
-    | Laravel will log all levels greater than or equal to the specified severity.
-    | For example, a default log_level of error will log error, critical, alert,
-    | and emergency messages.
-    |
-    | APP_LOG_LEVEL options are:
-    | "debug", "info", "notice", "warning", "error", "critical", "alert", "emergency"
-    |
-    */
-    
-    'log_level' => env('APP_LOG_LEVEL', 'error'),
-
-
-    /*
-    |--------------------------------------------------------------------------
     | Default Storage path for private uploads
     |--------------------------------------------------------------------------
     | This is the path for any uploaded files that have to be run through the
@@ -316,7 +266,6 @@ return [
         Intervention\Image\ImageServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
         Spatie\Backup\BackupServiceProvider::class,
-        Fideloper\Proxy\TrustedProxyServiceProvider::class,
         PragmaRX\Google2FALaravel\ServiceProvider::class,
         Laravel\Passport\PassportServiceProvider::class,
         Laravel\Tinker\TinkerServiceProvider::class,
@@ -340,8 +289,6 @@ return [
         * Custom service provider
         */
         App\Providers\MacroServiceProvider::class,
-
-
     ],
 
     /*
@@ -356,7 +303,6 @@ return [
     */
 
     'aliases' => [
-
         'App' => Illuminate\Support\Facades\App::class,
         'Artisan' => Illuminate\Support\Facades\Artisan::class,
         'Auth' => Illuminate\Support\Facades\Auth::class,
@@ -389,15 +335,12 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-        'Input' => Illuminate\Support\Facades\Input::class,
         'Form'      => Collective\Html\FormFacade::class,
         'Html'      => Collective\Html\HtmlFacade::class,
-        'Google2FA' => PragmaRX\Google2FA\Vendor\Laravel\Facade::class,
+        'Google2FA' => PragmaRX\Google2FALaravel\Facade::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
         'Image'     => Intervention\Image\ImageManagerStatic::class,
         'Carbon' => Carbon\Carbon::class,
-
-
     ],
 
 ];

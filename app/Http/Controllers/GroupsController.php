@@ -2,7 +2,6 @@
 namespace App\Http\Controllers;
 
 use Config;
-use Input;
 use Lang;
 use Redirect;
 use App\Models\Setting;
@@ -10,6 +9,7 @@ use Validator;
 use View;
 use App\Models\Group;
 use App\Helpers\Helper;
+use Illuminate\Http\Request;
 
 /**
  * This controller handles all actions related to User Groups for
@@ -42,13 +42,13 @@ class GroupsController extends Controller
     * @since [v1.0]
     * @return \Illuminate\Contracts\View\View
      */
-    public function create()
+    public function create(Request $request)
     {
         $group = new Group;
         // Get all the available permissions
         $permissions = config('permissions');
         $groupPermissions = Helper::selectedPermissionsArray($permissions, $permissions);
-        $selectedPermissions = Input::old('permissions', $groupPermissions);
+        $selectedPermissions = $request->old('permissions', $groupPermissions);
 
         // Show the page
         return view('groups/edit', compact('permissions', 'selectedPermissions', 'groupPermissions'))->with('group', $group);
@@ -62,12 +62,12 @@ class GroupsController extends Controller
     * @since [v1.0]
     * @return \Illuminate\Http\RedirectResponse
      */
-    public function store()
+    public function store(Request $request)
     {
         // create a new group instance
         $group = new Group();
-        $group->name = e(Input::get('name'));
-        $group->permissions = json_encode(Input::get('permission'));
+        $group->name = e($request->input('name'));
+        $group->permissions = json_encode($request->input('permission'));
 
         if ($group->save()) {
             return redirect()->route("groups.index")->with('success', trans('admin/groups/message.success.create'));
@@ -107,14 +107,14 @@ class GroupsController extends Controller
     * @since [v1.0]
     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update($id = null)
+    public function update(Request $request, $id = null)
     {
         $permissions = config('permissions');
         if (!$group = Group::find($id)) {
             return redirect()->route('groups.index')->with('error', trans('admin/groups/message.group_not_found', compact('id')));
         }
-        $group->name = e(Input::get('name'));
-        $group->permissions = json_encode(Input::get('permission'));
+        $group->name = e($request->input('name'));
+        $group->permissions = json_encode($request->input('permission'));
 
         if (!config('app.lock_passwords')) {
             if ($group->save()) {

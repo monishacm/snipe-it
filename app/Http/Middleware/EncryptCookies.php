@@ -22,7 +22,5 @@ class EncryptCookies extends BaseEncrypter
      *
      * @var bool
      */
-    protected static $serialize = true;
-
-
+    protected static $serialize = false;
 }

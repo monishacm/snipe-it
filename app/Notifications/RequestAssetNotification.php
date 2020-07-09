@@ -65,7 +65,6 @@ class RequestAssetNotification extends Notification
             $notifyBy[] = 'slack';
         }
 
-
         $notifyBy[] = 'mail';
 
         return $notifyBy;

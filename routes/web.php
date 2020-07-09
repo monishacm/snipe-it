@@ -1,6 +1,5 @@
 <?php
 
-
 Route::group(['middleware' => 'auth'], function () {
     /*
     * Companies
@@ -346,9 +345,6 @@ Route::get(
     ['uses' => 'Auth\LoginController@legacyAuthRedirect' ]
 );
 
-
-
-
 /*
 |--------------------------------------------------------------------------
 | Setup Routes
@@ -466,6 +462,3 @@ Route::group(['middleware' => 'web'], function () {
 });
 
 Auth::routes();
-
-
-

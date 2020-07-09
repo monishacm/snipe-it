@@ -5,7 +5,6 @@ use App\Http\Requests\CustomFieldRequest;
 use View;
 use App\Models\CustomFieldset;
 use App\Models\CustomField;
-use Input;
 use Validator;
 use Redirect;
 use App\Models\AssetModel;
@@ -43,10 +42,6 @@ class CustomFieldsController extends Controller
         $fields = CustomField::with("fieldset")->get();
         return view("custom_fields.index")->with("custom_fieldsets", $fieldsets)->with("custom_fields", $fields);
     }
-
-
-
-
 
     /**
     * Returns a view with a form to create a new custom field.
@@ -186,7 +181,7 @@ class CustomFieldsController extends Controller
         $field->help_text = $request->get("help_text");
         $field->show_in_email = $request->get("show_in_email", 0);
 
-        if (!in_array(Input::get('format'), array_keys(CustomField::$PredefinedFormats))) {
+        if (!in_array($request->input('format'), array_keys(CustomField::$PredefinedFormats))) {
             $field->format = e($request->get("custom_format"));
         } else {
             $field->format = e($request->get("format"));

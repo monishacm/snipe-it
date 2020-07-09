@@ -3,7 +3,7 @@
 {{-- Page title --}}
 @section('title')
 
-@if (Input::get('status')=='deleted')
+@if (request('status')=='deleted')
     {{ trans('general.deleted') }}
 @else
     {{ trans('general.current') }}
@@ -22,7 +22,7 @@
       <a href="{{ route('users.create') }}" class="btn btn-primary pull-right" style="margin-right: 5px;">  {{ trans('general.create') }}</a>
     @endcan
 
-    @if (Input::get('status')=='deleted')
+    @if (request('status')=='deleted')
       <a class="btn btn-default pull-right" href="{{ route('users.index') }}" style="margin-right: 5px;">{{ trans('admin/users/table.show_current') }}</a>
     @else
       <a class="btn btn-default pull-right" href="{{ route('users.index', ['status' => 'deleted']) }}" style="margin-right: 5px;">{{ trans('admin/users/table.show_deleted') }}</a>
@@ -45,7 +45,7 @@
                'class' => 'form-inline',
                 'id' => 'bulkForm']) }}
 
-            @if (Input::get('status')!='deleted')
+            @if (request('status')!='deleted')
               @can('delete', \App\Models\User::class)
                 <div id="toolbar">
                     <label for="bulk_actions" class="sr-only">Bulk Actions</label>

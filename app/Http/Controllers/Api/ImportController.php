@@ -9,7 +9,6 @@ use App\Http\Transformers\ImportsTransformer;
 use App\Models\Company;
 use App\Models\Import;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
 use League\Csv\Reader;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -37,11 +36,11 @@ class ImportController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store()
+    public function store(Request $request)
     {
         $this->authorize('import');
         if (!config('app.lock_passwords')) {
-            $files = Input::file('files');
+            $files = $request->file('files');
             $path = config('app.private_uploads').'/imports';
             $results = [];
             $import = new Import;

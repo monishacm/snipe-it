@@ -11,7 +11,6 @@ use App\Models\User;
 use Auth;
 use Config;
 use Illuminate\Http\Request;
-use Input;
 use Redirect;
 use Log;
 use View;
@@ -97,15 +96,15 @@ class LoginController extends Controller
         }
 
         // Check if the user already exists in the database and was imported via LDAP
-        $user = User::where('username', '=', Input::get('username'))->whereNull('deleted_at')->where('ldap_import', '=', 1)->where('activated', '=', '1')->first();
+        $user = User::where('username', '=', $request->input('username'))->whereNull('deleted_at')->where('ldap_import', '=', 1)->where('activated', '=', '1')->first();
         Log::debug("Local auth lookup complete");
 
         // The user does not exist in the database. Try to get them from LDAP.
         // If user does not exist and authenticates successfully with LDAP we
         // will create it on the fly and sign in with default permissions
         if (!$user) {
-            Log::debug("Local user ".Input::get('username')." does not exist");
-            Log::debug("Creating local user ".Input::get('username'));
+            Log::debug("Local user ".$request->input('username')." does not exist");
+            Log::debug("Creating local user ".$request->input('username'));
 
             if ($user = Ldap::createUserFromLdap($ldap_user)) { //this handles passwords on its own
                 Log::debug("Local user created.");
@@ -143,7 +142,7 @@ class LoginController extends Controller
             return view('errors.403');
         }
 
-        $validator = $this->validator(Input::all());
+        $validator = $this->validator($request->all());
 
         if ($validator->fails()) {
             return redirect()->back()->withInput()->withErrors($validator);

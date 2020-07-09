@@ -22,7 +22,6 @@ class CheckLocale
     public function handle($request, Closure $next, $guard = null)
     {
 
-
         if (Setting::getSettings()) {
             // User's preference
             if (($request->user()) && ($request->user()->locale)) {

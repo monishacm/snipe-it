@@ -11,6 +11,7 @@ use App\Models\License;
 use App\Models\LicenseSeat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class LicensesController extends Controller
 {
@@ -122,8 +123,6 @@ class LicensesController extends Controller
     }
 
 
-
-
     /**
      * Store a newly created resource in storage.
      *
@@ -225,7 +224,6 @@ class LicensesController extends Controller
      */
     public function seats(Request $request, $licenseId)
     {
-
         if ($license = License::find($licenseId)) {
 
             $this->authorize('view', $license);

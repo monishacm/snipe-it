@@ -10,7 +10,6 @@ use App\Models\User;
 use Auth;
 use Config;
 use DB;
-use Input;
 use Lang;
 use Redirect;
 use Slack;
@@ -147,8 +146,8 @@ class ConsumablesController extends Controller
         $consumable->model_number           = $request->input('model_number');
         $consumable->item_no                = $request->input('item_no');
         $consumable->purchase_date          = $request->input('purchase_date');
-        $consumable->purchase_cost          = Helper::ParseFloat(Input::get('purchase_cost'));
-        $consumable->qty                    = Helper::ParseFloat(Input::get('qty'));
+        $consumable->purchase_cost          = Helper::ParseFloat($request->input('purchase_cost'));
+        $consumable->qty                    = Helper::ParseFloat($request->input('qty'));
 
         if ($request->file('image')) {
             $image = $request->file('image');
@@ -243,7 +242,7 @@ class ConsumablesController extends Controller
         $this->authorize('checkout', $consumable);
 
         $admin_user = Auth::user();
-        $assigned_to = e(Input::get('assigned_to'));
+        $assigned_to = e($request->input('assigned_to'));
 
         // Check if the user exists
         if (is_null($user = User::find($assigned_to))) {
@@ -252,15 +251,15 @@ class ConsumablesController extends Controller
         }
 
         // Update the consumable data
-        $consumable->assigned_to = e(Input::get('assigned_to'));
+        $consumable->assigned_to = e($request->input('assigned_to'));
 
         $consumable->users()->attach($consumable->id, [
             'consumable_id' => $consumable->id,
             'user_id' => $admin_user->id,
-            'assigned_to' => e(Input::get('assigned_to'))
+            'assigned_to' => e($request->input('assigned_to'))
         ]);
 
-        $logaction = $consumable->logCheckout(e(Input::get('note')), $user);
+        $logaction = $consumable->logCheckout(e($request->input('note')), $user);
         $data['log_id'] = $logaction->id;
         $data['eula'] = $consumable->getEula();
         $data['first_name'] = $user->first_name;

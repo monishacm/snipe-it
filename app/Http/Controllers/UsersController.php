@@ -12,8 +12,6 @@ use App\Models\Group;
 use App\Models\Ldap;
 use App\Models\License;
 use App\Models\LicenseSeat;
-use App\Models\Location;
-use App\Models\Setting;
 use App\Models\User;
 use App\Notifications\WelcomeNotification;
 use Artisan;
@@ -25,7 +23,6 @@ use Gate;
 use HTML;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use Input;
 use Lang;
 use League\Csv\Reader;
 use Mail;
@@ -36,6 +33,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use URL;
 use View;
+use Log;
 
 /**
  * This controller handles all actions related to Users for
@@ -71,26 +69,25 @@ class UsersController extends Controller
     * @since [v1.0]
     * @return \Illuminate\Contracts\View\View
      */
-    public function create()
+    public function create(Request $request)
     {
         $this->authorize('create', User::class);
         $groups = Group::pluck('name', 'id');
 
-        if (Input::old('groups')) {
-            $userGroups = Group::whereIn('id', Input::old('groups'))->pluck('name', 'id');
+        if ($request->old('groups')) {
+            $userGroups = Group::whereIn('id', $request->old('groups'))->pluck('name', 'id');
         } else {
             $userGroups = collect();
         }
 
         $permissions = config('permissions');
-        $userPermissions = Helper::selectedPermissionsArray($permissions, Input::old('permissions', array()));
+        $userPermissions = Helper::selectedPermissionsArray($permissions, $request->old('permissions', array()));
         $permissions = $this->filterDisplayable($permissions);
 
         $user = new User;
         $user->activated = 1;
 
-        return view('users/edit', compact('groups', 'userGroups', 'permissions', 'userPermissions'))
-        ->with('user', $user);
+        return view('users/edit', compact('groups', 'userGroups', 'permissions', 'userPermissions'))->with('user', $user);
     }
 
     /**
@@ -392,7 +389,7 @@ class UsersController extends Controller
 
         if (($request->filled('ids')) && (count($request->input('ids')) > 0)) {
             $statuslabel_list = Helper::statusLabelList();
-            $user_raw_array = array_keys(Input::get('ids'));
+            $user_raw_array = array_keys($request->input('ids'));
             $users = User::whereIn('id', $user_raw_array)->with('groups', 'assets', 'licenses', 'accessories')->get();
             if ($request->input('bulk_actions') == 'edit') {
                 return view('users/bulk-edit', compact('users'))
@@ -496,7 +493,7 @@ class UsersController extends Controller
             return redirect()->route('users.index')->with('error', 'No status selected');
         } else {
 
-            $user_raw_array = Input::get('ids');
+            $user_raw_array = $request->input('ids');
             $asset_array = array();
 
             if (($key = array_search(Auth::user()->id, $user_raw_array)) !== false) {
@@ -528,7 +525,7 @@ class UsersController extends Controller
                     $logAction->logaction('checkin from');
 
                     Asset::whereIn('id', $asset_array)->update([
-                                'status_id' => e(Input::get('status_id')),
+                                'status_id' => e($request->input('status_id')),
                                 'assigned_to' => null,
                     ]);
                 }
@@ -673,12 +670,12 @@ class UsersController extends Controller
     * @param  int  $id
     * @return \Illuminate\Contracts\View\View
      */
-    public function getClone($id = null)
+    public function getClone(Request $request, $id = null)
     {
         $this->authorize('create', User::class);
         // We need to reverse the UI specific logic for our
         // permissions here before we update the user.
-        $permissions = Input::get('permissions', array());
+        $permissions = $request->input('permissions', array());
         //$this->decodePermissions($permissions);
         app('request')->request->set('permissions', $permissions);
 

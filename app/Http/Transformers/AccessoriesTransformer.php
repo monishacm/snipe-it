@@ -39,7 +39,6 @@ class AccessoriesTransformer
             'image' => ($accessory->image) ? url('/').'/uploads/accessories/'.e($accessory->image) : null,
             'created_at' => Helper::getFormattedDateObject($accessory->created_at, 'datetime'),
             'updated_at' => Helper::getFormattedDateObject($accessory->updated_at, 'datetime'),
-
         ];
 
         $permissions_array['available_actions'] = [

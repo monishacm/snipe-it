@@ -3,9 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\AssetModel;
-use Session;
 use Illuminate\Http\Exceptions\HttpResponseException;
-
 use Illuminate\Contracts\Validation\Validator;
 
 class AssetRequest extends Request
@@ -73,9 +71,9 @@ class AssetRequest extends Request
      */
     protected function failedValidation(Validator $validator)
     {
-        $this->session()->flash('errors', Session::get('errors', new \Illuminate\Support\ViewErrorBag)
+        $this->session()->flash('errors', session('errors', new \Illuminate\Support\ViewErrorBag)
             ->put('default', new \Illuminate\Support\MessageBag($validator->errors()->toArray())));
-        \Input::flash();
+        request()->flash();
         throw new HttpResponseException(response()->json([
             'status' => 'error',
             'messages' => $validator->errors(),

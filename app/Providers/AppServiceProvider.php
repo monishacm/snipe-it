@@ -1,9 +1,8 @@
 <?php
+
 namespace App\Providers;
 
-
 use Illuminate\Support\ServiceProvider;
-use Log;
 use Illuminate\Support\Facades\Schema;
 use App\Observers\AssetObserver;
 use App\Observers\LicenseObserver;
@@ -15,7 +14,8 @@ use App\Models\License;
 use App\Models\Accessory;
 use App\Models\Consumable;
 use App\Models\Component;
-
+use Illuminate\Support\Facades\Log;
+use Laravel\Passport\Passport;
 
 /**
  * This service provider handles setting the observers on models
@@ -41,8 +41,6 @@ class AppServiceProvider extends ServiceProvider
         Component::observe(ComponentObserver::class);
         Consumable::observe(ConsumableObserver::class);
         License::observe(LicenseObserver::class);
-
-
     }
 
     /**
@@ -52,15 +50,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $monolog = Log::getMonolog();
-        $log_level = config('app.log_level');
-
         if (($this->app->environment('production'))  && (config('services.rollbar.access_token'))){
             $this->app->register(\Rollbar\Laravel\RollbarServiceProvider::class);
-        }
-        
-        foreach ($monolog->getHandlers() as $handler) {
-            $handler->setLevel($log_level);
         }
     }
 }

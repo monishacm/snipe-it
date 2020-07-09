@@ -6,7 +6,6 @@ use App\Models\User;
 use App\Models\Location;
 use App\Models\Asset;
 
-
 $factory->define(Actionlog::class, function (Faker\Generator $faker) {
     return [
         'note' => 'Sample checkout from DB seeder!',

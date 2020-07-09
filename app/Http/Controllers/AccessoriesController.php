@@ -10,7 +10,6 @@ use Carbon\Carbon;
 use Config;
 use DB;
 use Gate;
-use Input;
 use Lang;
 use Redirect;
 use Illuminate\Http\Request;
@@ -250,12 +249,12 @@ class AccessoriesController extends Controller
 
         $this->authorize('checkout', $accessory);
 
-        if (!$user = User::find(Input::get('assigned_to'))) {
+        if (!$user = User::find($request->input('assigned_to'))) {
             return redirect()->route('checkout/accessory', $accessory->id)->with('error', trans('admin/accessories/message.checkout.user_does_not_exist'));
         }
 
       // Update the accessory data
-        $accessory->assigned_to = e(Input::get('assigned_to'));
+        $accessory->assigned_to = e($request->input('assigned_to'));
 
         $accessory->users()->attach($accessory->id, [
             'accessory_id' => $accessory->id,
@@ -264,7 +263,7 @@ class AccessoriesController extends Controller
             'assigned_to' => $request->get('assigned_to')
         ]);
 
-        $logaction = $accessory->logCheckout(e(Input::get('note')), $user);
+        $logaction = $accessory->logCheckout(e($request->input('note')), $user);
 
         DB::table('accessories_users')->where('assigned_to', '=', $accessory->assigned_to)->where('accessory_id', '=', $accessory->id)->first();
 
@@ -331,7 +330,7 @@ class AccessoriesController extends Controller
         $this->authorize('checkin', $accessory);
 
         $return_to = e($accessory_user->assigned_to);
-        $logaction = $accessory->logCheckin(User::find($return_to), e(Input::get('note')));
+        $logaction = $accessory->logCheckin(User::find($return_to), e($request->input('note')));
 
         // Was the accessory updated?
         if (DB::table('accessories_users')->where('id', '=', $accessory_user->id)->delete()) {

@@ -7,7 +7,6 @@ use DB;
 use Log;
 
 
-
 /**
  * This service provider handles sharing the snipeSettings variable, and sets
  * some common upload path and image urls.

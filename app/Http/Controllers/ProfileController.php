@@ -2,7 +2,6 @@
 namespace App\Http\Controllers;
 
 use Image;
-use Input;
 use Redirect;
 use View;
 use Auth;
@@ -65,15 +64,15 @@ class ProfileController extends Controller
             $user->location_id    = $request->input('location_id');
         }
         
-        if (Input::file('avatar')) {
-            $image = Input::file('avatar');
+        if ($request->file('avatar')) {
+            $image = $request->file('avatar');
             $file_name = str_slug($user->first_name."-".$user->last_name).".".$image->getClientOriginalExtension();
             $path = public_path('uploads/avatars/'.$file_name);
             Image::make($image->getRealPath())->resize(84, 84)->save($path);
             $user->avatar = $file_name;
         }
 
-        if (Input::get('avatar_delete') == 1 && Input::file('avatar') == "") {
+        if ($request->input('avatar_delete') == 1 && $request->file('avatar') == "") {
             $user->avatar = null;
         }
 

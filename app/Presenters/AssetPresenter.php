@@ -1,8 +1,9 @@
 <?php
 namespace App\Presenters;
 
-use App\Models\CustomField;
 use DateTime;
+use App\Models\CustomField;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * Class AssetPresenter
@@ -10,7 +11,6 @@ use DateTime;
  */
 class AssetPresenter extends Presenter
 {
-
     /**
      * Json Column Layout for bootstrap table
      * @return string
@@ -254,7 +254,7 @@ class AssetPresenter extends Presenter
         // models. We only pass the fieldsets that pertain to each asset (via their model) so that we
         // don't junk up the REST API with tons of custom fields that don't apply
 
-        $fields =  CustomField::whereHas('fieldset', function ($query) {
+        $fields =  CustomField::whereHas('fieldset', function (Builder $query) {
             $query->whereHas('models');
         })->get();
 
@@ -274,7 +274,6 @@ class AssetPresenter extends Presenter
                 "class" => ($field->field_encrypted=='1') ? 'css-padlock' : '',
                 "visible" => true,
             ];
-
         }
 
         $layout[] = [

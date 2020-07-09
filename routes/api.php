@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,7 +15,6 @@ use Illuminate\Http\Request;
 
 
 Route::group(['prefix' => 'v1','namespace' => 'Api', 'middleware' => 'api'], function () {
-
     Route::group(['prefix' => 'account'], function () {
         Route::get('requestable/hardware',
             [
@@ -190,20 +189,17 @@ Route::group(['prefix' => 'v1','namespace' => 'Api', 'middleware' => 'api'], fun
 
     /*--- Consumables API ---*/
 
-    Route::resource('consumables', 'ConsumablesController',
-        [
-            'names' =>
-                [
-                    'index' => 'api.consumables.index',
-                    'show' => 'api.consumables.show',
-                    'store' => 'api.consumables.store',
-                    'update' => 'api.consumables.update',
-                    'destroy' => 'api.consumables.destroy'
-                ],
-            'except' => ['create', 'edit'],
-            'parameters' => ['consumable' => 'consumable_id']
-        ]
-    ); // Consumables resource
+    Route::resource('consumables', 'ConsumablesController')
+    ->names([
+        'index' => 'api.consumables.index',
+        'show' => 'api.consumables.show',
+        'store' => 'api.consumables.store',
+        'update' => 'api.consumables.update',
+        'destroy' => 'api.consumables.destroy'
+    ])
+    ->except(['create', 'edit'])
+    ->parameters(['consumable' => 'consumable_id']);
+    // Consumables resource
     Route::get('consumables/view/{id}/users',
         [
             'as' => 'api.consumables.showUsers',
@@ -299,21 +295,17 @@ Route::group(['prefix' => 'v1','namespace' => 'Api', 'middleware' => 'api'], fun
 
 
     /*--- Groups API ---*/
-
-    Route::resource('groups', 'GroupsController',
-        [
-            'names' =>
-                [
-                    'index' => 'api.groups.index',
-                    'show' => 'api.groups.show',
-                    'store' => 'api.groups.store',
-                    'update' => 'api.groups.update',
-                    'destroy' => 'api.groups.destroy'
-                ],
-            'except' => ['create', 'edit'],
-            'parameters' => ['group' => 'group_id']
-        ]
-    ); // Groups resource
+    Route::resource('groups', 'GroupsController')
+            ->names([
+                        'index' => 'api.groups.index',
+                        'show' => 'api.groups.show',
+                        'store' => 'api.groups.store',
+                        'update' => 'api.groups.update',
+                        'destroy' => 'api.groups.destroy'
+                    ]
+                )
+                ->except(['create', 'edit'])
+                ->parameters(['group' => 'group_id']); // Groups resource
 
 
     /*--- Hardware API ---*/

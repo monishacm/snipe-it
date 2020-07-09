@@ -24,8 +24,6 @@ use Illuminate\Contracts\Encryption\DecryptException;
 
 class Helper
 {
-
-
     /**
      * Simple helper to invoke the markdown parser
      *

@@ -2,28 +2,26 @@
 
 @section('title0')
 
-  @if ((Input::get('company_id')) && ($company))
-    {{ $company->name }}
-  @endif
+@if ((request('company_id')) && ($company))
+  {{ $company->name }}
+@endif
 
-
-
-@if (Input::get('status'))
-  @if (Input::get('status')=='Pending')
+@if (request('status'))
+  @if (request('status')=='Pending')
     {{ trans('general.pending') }}
-  @elseif (Input::get('status')=='RTD')
+  @elseif (request('status')=='RTD')
     {{ trans('general.ready_to_deploy') }}
-  @elseif (Input::get('status')=='Deployed')
+  @elseif (request('status')=='Deployed')
     {{ trans('general.deployed') }}
-  @elseif (Input::get('status')=='Undeployable')
+  @elseif (request('status')=='Undeployable')
     {{ trans('general.undeployable') }}
-  @elseif (Input::get('status')=='Deployable')
+  @elseif (request('status')=='Deployable')
     {{ trans('general.deployed') }}
-  @elseif (Input::get('status')=='Requestable')
+  @elseif (request('status')=='Requestable')
     {{ trans('admin/hardware/general.requestable') }}
-  @elseif (Input::get('status')=='Archived')
+  @elseif (request('status')=='Archived')
     {{ trans('general.archived') }}
-  @elseif (Input::get('status')=='Deleted')
+  @elseif (request('status')=='Deleted')
     {{ trans('general.deleted') }}
   @endif
 @else
@@ -31,8 +29,8 @@
 @endif
 {{ trans('general.assets') }}
 
-  @if (Input::has('order_number'))
-    : Order #{{ Input::get('order_number') }}
+  @if (request()->has('order_number'))
+    : Order #{{ request('order_number') }}
   @endif
 @stop
 
@@ -61,7 +59,7 @@
            'id' => 'bulkForm']) }}
           <div class="row">
             <div class="col-md-12">
-              @if (Input::get('status')!='Deleted')
+              @if (request('status')!='Deleted')
               <div id="toolbar">
                 <label for="bulk_actions"><span class="sr-only">Bulk Actions</span></label>
                 <select name="bulk_actions" class="form-control select2" aria-label="bulk_actions">
@@ -92,16 +90,15 @@
                 id="assetsListingTable"
                 class="table table-striped snipe-table"
                 data-url="{{ route('api.assets.index',
-                    array('status' => e(Input::get('status')),
-                    'order_number'=>e(Input::get('order_number')),
-                    'company_id'=>e(Input::get('company_id')),
-                    'status_id'=>e(Input::get('status_id')))) }}"
+                    array('status' => e(request('status')),
+                    'order_number'=>e(request('order_number')),
+                    'company_id'=>e(request('company_id')),
+                    'status_id'=>e(request('status_id')))) }}"
                 data-export-options='{
-                "fileName": "export{{ (Input::has('status')) ? '-'.str_slug(Input::get('status')) : '' }}-assets-{{ date('Y-m-d') }}",
+                "fileName": "export{{ (request()->has('status')) ? '-'.str_slug(request('status')) : '' }}-assets-{{ date('Y-m-d') }}",
                 "ignoreColumn": ["actions","image","change","checkbox","checkincheckout","icon"]
                 }'>
               </table>
-
             </div><!-- /.col -->
           </div><!-- /.row -->
         {{ Form::close() }}

@@ -2,7 +2,6 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Helper;
-use Input;
 use Lang;
 use App\Models\Location;
 use phpDocumentor\Reflection\Types\Array_;

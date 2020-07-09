@@ -210,7 +210,7 @@
              * Get all of the personal access tokens for the user.
              */
             getTokens() {
-                this.$http.get(this.tokenUrl)
+                axios.get(this.tokenUrl)
                         .then(response => {
                             this.tokens = response.data;
                         });
@@ -220,7 +220,7 @@
              * Get all of the available scopes.
              */
             getScopes() {
-                this.$http.get(this.scopesUrl)
+                axios.get(this.scopesUrl)
                         .then(response => {
                             this.scopes = response.data;
                         });
@@ -241,7 +241,7 @@
 
                 this.form.errors = [];
 
-                this.$http.post(this.tokenUrl, this.form)
+                axios.post(this.tokenUrl, this.form)
                         .then(response => {
                             this.form.name = '';
                             this.form.scopes = [];
@@ -251,9 +251,9 @@
 
                             this.showAccessToken(response.data.accessToken);
                         })
-                        .catch(response => {
-                            if (typeof response.data === 'object') {
-                                this.form.errors = _.flatten(_.toArray(response.data));
+                        .catch(error => {
+                            if (typeof error.response.data === 'object') {
+                                this.form.errors = _.flatten(_.toArray(error.response.data.errors));
                             } else {
                             console.dir(this.form);
                                 this.form.errors = ['Something went wrong. Please try again.'];
@@ -294,7 +294,7 @@
              * Revoke the given token.
              */
             revoke(token) {
-                this.$http.delete(this.tokenUrl +'/'+ token.id)
+                axios.delete(this.tokenUrl +'/'+ token.id)
                         .then(response => {
                             this.getTokens();
                         });

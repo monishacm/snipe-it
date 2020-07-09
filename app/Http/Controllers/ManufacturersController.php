@@ -8,7 +8,6 @@ use App\Models\Manufacturer;
 use Auth;
 use Exception;
 use Gate;
-use Input;
 use Lang;
 use Redirect;
 use Str;

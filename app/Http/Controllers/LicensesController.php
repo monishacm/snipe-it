@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AssetFileRequest;
 use Assets;
 use Illuminate\Support\Facades\Session;
-use Input;
 use Lang;
 use App\Models\License;
 use App\Models\Asset;
@@ -317,7 +316,7 @@ class LicensesController extends Controller
             ];
 
             // Create a new validator instance from our validation rules
-            $validator = Validator::make(Input::all(), $rules);
+            $validator = Validator::make($request->all(), $rules);
 
             // If validation fails, we'll exit the operation now.
             if ($validator->fails()) {
@@ -509,9 +508,9 @@ class LicensesController extends Controller
         if (isset($license->id)) {
             $this->authorize('update', $license);
 
-            if (Input::hasFile('file')) {
+            if ($request->hasFile('file')) {
 
-                foreach (Input::file('file') as $file) {
+                foreach ($request->file('file') as $file) {
                     $extension = $file->getClientOriginalExtension();
                     $filename = 'license-'.$license->id.'-'.str_random(8).'-'.str_slug(basename($file->getClientOriginalName(), '.'.$extension)).'.'.$extension;
                     $upload_success = $file->move($destinationPath, $filename);

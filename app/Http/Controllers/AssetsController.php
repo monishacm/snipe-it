@@ -2,17 +2,12 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Helper;
-use App\Http\Requests\AssetCheckinRequest;
-use App\Http\Requests\AssetCheckoutRequest;
 use App\Http\Requests\AssetFileRequest;
 use App\Http\Requests\AssetRequest;
-use App\Http\Requests\ItemImportRequest;
 use App\Models\Actionlog;
 use App\Models\Asset;
 use App\Models\AssetModel;
 use App\Models\Company;
-use App\Models\CustomField;
-use App\Models\Import;
 use App\Models\Location;
 use App\Models\Setting;
 use App\Models\User;
@@ -24,7 +19,6 @@ use DB;
 use Gate;
 use Illuminate\Http\Request;
 use Image;
-use Input;
 use Lang;
 use League\Csv\Reader;
 use Log;
@@ -93,7 +87,7 @@ class AssetsController extends Controller
         $this->authorize('create', Asset::class);
         $view = View::make('hardware/edit')
             ->with('statuslabel_list', Helper::statusLabelList())
-            ->with('item', new Asset)
+            ->with('item', new Asset())
             ->with('statuslabel_types', Helper::statusTypeList());
 
         if ($request->filled('model_id')) {
@@ -113,7 +107,6 @@ class AssetsController extends Controller
     public function store(AssetRequest $request)
     {
         $this->authorize(Asset::class);
-
 
         $asset = new Asset();
         $asset->model()->associate(AssetModel::find($request->input('model_id')));
@@ -169,7 +162,7 @@ class AssetsController extends Controller
                 })->save($path);
                 $asset->image = $file_name;
             } catch (\Exception $e) {
-                \Input::flash();
+                $request->flash();
                 $messageBag = new \Illuminate\Support\MessageBag();
                 $messageBag->add('image', $e->getMessage());
                 \Session()->flash('errors', \Session::get('errors', new \Illuminate\Support\ViewErrorBag)
@@ -217,7 +210,7 @@ class AssetsController extends Controller
             \Session::flash('success', trans('admin/hardware/message.create.success'));
             return response()->json(['redirect_url' => route('hardware.index')]);
         }
-        \Input::flash();
+        $request->flash();
         \Session::flash('errors', $asset->getErrors());
         return response()->json(['errors' => $asset->getErrors()], 500);
     }
@@ -365,7 +358,7 @@ class AssetsController extends Controller
                 })->save($path);
                 $asset->image = $file_name;
             } catch (\Exception $e) {
-                \Input::flash();
+                $request->flash();
                 $messageBag = new \Illuminate\Support\MessageBag();
                 $messageBag->add('image', $e->getMessage());
                 \Session()->flash('errors', \Session::get('errors', new \Illuminate\Support\ViewErrorBag)
@@ -404,7 +397,7 @@ class AssetsController extends Controller
             \Session::flash('success', trans('admin/hardware/message.update.success'));
             return response()->json(['redirect_url' => route("hardware.show", $assetId)]);
         }
-        \Input::flash();
+        $request->flash();
         \Session::flash('errors', $asset->getErrors());
         return response()->json(['errors' => $asset->getErrors()], 500);
     }
@@ -639,7 +632,7 @@ class AssetsController extends Controller
             ini_set("auto_detect_line_endings", '1');
         }
 
-        $csv = Reader::createFromPath(Input::file('user_import_csv'));
+        $csv = Reader::createFromPath($request->file('user_import_csv'));
         $csv->setHeaderOffset(0);
         $results = $csv->getRecords();
         $item = array();

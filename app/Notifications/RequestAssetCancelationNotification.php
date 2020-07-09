@@ -6,6 +6,7 @@ use App\Models\Setting;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Log;
 
 class RequestAssetCancelationNotification extends Notification
 {
@@ -19,8 +20,7 @@ class RequestAssetCancelationNotification extends Notification
      *
      * @param $params
      */
-    public function __construct($params)
-    {
+    public function __construct($params) {
         $this->target = $params['target'];
         $this->item = $params['item'];
         $this->note = '';
@@ -44,8 +44,6 @@ class RequestAssetCancelationNotification extends Notification
             $this->expected_checkin = \App\Helpers\Helper::getFormattedDateObject($this->item->expected_checkin, 'date',
                 false);
         }
-
-
     }
 
     /**
@@ -54,26 +52,21 @@ class RequestAssetCancelationNotification extends Notification
      * @param  mixed  $notifiable
      * @return array
      */
-    public function via()
-    {
+    public function via() {
 
         $notifyBy = [];
 
         if (Setting::getSettings()->slack_endpoint!='') {
-            \Log::debug('use slack');
+            Log::debug('use slack');
             $notifyBy[] = 'slack';
         }
-
 
         $notifyBy[] = 'mail';
 
         return $notifyBy;
     }
 
-    public function toSlack()
-    {
-
-
+    public function toSlack() {
         $target = $this->target;
         $item = $this->item;
         $note = $this->note;
@@ -128,10 +121,7 @@ class RequestAssetCancelationNotification extends Notification
             ])
             ->subject(trans('Item Request Canceled'));
 
-
         return $message;
-
-
     }
 
 }

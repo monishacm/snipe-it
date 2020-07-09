@@ -13,8 +13,7 @@
 @stop
 
 @section('header_right')
-<a href="{{ URL::previous() }}" class="btn btn-primary pull-right">
-  {{ trans('general.back') }}</a>
+<a href="{{ URL::previous() }}" class="btn btn-primary pull-right">{{ trans('general.back') }}</a>
 @stop
 
 {{-- Page content --}}
@@ -67,7 +66,7 @@
 
 <div class="row">
   <div class="col-md-8 col-md-offset-2">
-    <form class="form-horizontal" method="post" autocomplete="off" action="{{ ($user) ? route('users.update', ['user' => $user->id]) : route('users.store') }}" id="userForm">
+    <form class="form-horizontal" method="post" autocomplete="off" action="{{ ($user != null && $user->id != null) ? route('users.update', ['user' => $user->id]) : route('users.store') }}" id="userForm">
       {{csrf_field()}}
 
       @if($user->id)
@@ -88,7 +87,7 @@
                 <div class="form-group {{ $errors->has('first_name') ? 'has-error' : '' }}">
                   <label class="col-md-3 control-label" for="first_name">{{ trans('general.first_name') }}</label>
                   <div class="col-md-8 {{  (\App\Helpers\Helper::checkIfRequired($user, 'first_name')) ? ' required' : '' }}">
-                    <input class="form-control" type="text" name="first_name" id="first_name" value="{{ Input::old('first_name', $user->first_name) }}" />
+                    <input class="form-control" type="text" name="first_name" id="first_name" value="{{ request()->old('first_name', $user->first_name) }}" />
                     {!! $errors->first('first_name', '<span class="alert-msg" aria-hidden="true">:message</span>') !!}
                   </div>
                 </div>
@@ -97,7 +96,7 @@
                 <div class="form-group {{ $errors->has('last_name') ? 'has-error' : '' }}">
                   <label class="col-md-3 control-label" for="last_name">{{ trans('general.last_name') }} </label>
                   <div class="col-md-8{{  (\App\Helpers\Helper::checkIfRequired($user, 'last_name')) ? ' required' : '' }}">
-                    <input class="form-control" type="text" name="last_name" id="last_name" value="{{ Input::old('last_name', $user->last_name) }}" />
+                    <input class="form-control" type="text" name="last_name" id="last_name" value="{{ request()->old('last_name', $user->last_name) }}" />
                     {!! $errors->first('last_name', '<span class="alert-msg" aria-hidden="true">:message</span>') !!}
                   </div>
                 </div>
@@ -112,7 +111,7 @@
                         type="text"
                         name="username"
                         id="username"
-                        value="{{ Input::old('username', $user->username) }}"
+                        value="{{ request()->old('username', $user->username) }}"
                         autocomplete="off"
                         readonly
                         onfocus="this.removeAttribute('readonly');"
@@ -123,7 +122,7 @@
                       @endif
                     @else
                       (Managed via LDAP)
-                          <input type="hidden" name="username" value="{{ Input::old('username', $user->username) }}">
+                          <input type="hidden" name="username" value="{{ request()->old('username', $user->username) }}">
 
                     @endif
 
@@ -197,7 +196,7 @@
                       type="text"
                       name="email"
                       id="email"
-                      value="{{ Input::old('email', $user->email) }}"
+                      value="{{ request()->old('email', $user->email) }}"
                       {{ ((config('app.lock_passwords') && ($user->id)) ? ' disabled' : '') }}
                       autocomplete="off"
                       readonly
@@ -218,7 +217,7 @@
                 <div class="form-group {{ $errors->has('locale') ? 'has-error' : '' }}">
                   <label class="col-md-3 control-label" for="locale">{{ trans('general.language') }}</label>
                   <div class="col-md-8">
-                    {!! Form::locales('locale', Input::old('locale', $user->locale), 'select2') !!}
+                    {!! Form::locales('locale', request()->old('locale', $user->locale), 'select2') !!}
                     {!! $errors->first('locale', '<span class="alert-msg" aria-hidden="true">:message</span>') !!}
                   </div>
                 </div>
@@ -233,7 +232,7 @@
                       aria-label="employee_num"
                       name="employee_num"
                       id="employee_num"
-                      value="{{ Input::old('employee_num', $user->employee_num) }}"
+                      value="{{ request()->old('employee_num', $user->employee_num) }}"
                     />
                     {!! $errors->first('employee_num', '<span class="alert-msg" aria-hidden="true">:message</span>') !!}
                   </div>
@@ -249,7 +248,7 @@
                       type="text"
                       name="jobtitle"
                       id="jobtitle"
-                      value="{{ Input::old('jobtitle', $user->jobtitle) }}"
+                      value="{{ request()->old('jobtitle', $user->jobtitle) }}"
                     />
                     {!! $errors->first('jobtitle', '<span class="alert-msg" aria-hidden="true">:message</span>') !!}
                   </div>
@@ -270,7 +269,7 @@
                 <div class="form-group {{ $errors->has('phone') ? 'has-error' : '' }}">
                   <label class="col-md-3 control-label" for="phone">{{ trans('admin/users/table.phone') }}</label>
                   <div class="col-md-4">
-                    <input class="form-control" type="text" name="phone" id="phone" value="{{ Input::old('phone', $user->phone) }}" />
+                    <input class="form-control" type="text" name="phone" id="phone" value="{{ request()->old('phone', $user->phone) }}" />
                     {!! $errors->first('phone', '<span class="alert-msg" aria-hidden="true">:message</span>') !!}
                   </div>
                 </div>
@@ -279,7 +278,7 @@
                   <div class="form-group {{ $errors->has('website') ? ' has-error' : '' }}">
                       <label for="website" class="col-md-3 control-label">{{ trans('general.website') }}</label>
                       <div class="col-md-8">
-                          <input class="form-control" type="text" name="website" id="website" value="{{ Input::old('website', $user->website) }}" />
+                          <input class="form-control" type="text" name="website" id="website" value="{{ request()->old('website', $user->website) }}" />
                           {!! $errors->first('website', '<span class="alert-msg" aria-hidden="true"><i class="fa fa-times" aria-hidden="true"></i> :message</span>') !!}
                       </div>
                   </div>
@@ -288,7 +287,7 @@
                   <div class="form-group{{ $errors->has('address') ? ' has-error' : '' }}">
                       <label class="col-md-3 control-label" for="address">{{ trans('general.address') }}</label>
                       <div class="col-md-4">
-                          <input class="form-control" type="text" name="address" id="address" value="{{ Input::old('address', $user->address) }}" />
+                          <input class="form-control" type="text" name="address" id="address" value="{{ request()->old('address', $user->address) }}" />
                           {!! $errors->first('address', '<span class="alert-msg" aria-hidden="true">:message</span>') !!}
                       </div>
                   </div>
@@ -297,7 +296,7 @@
                   <div class="form-group{{ $errors->has('city') ? ' has-error' : '' }}">
                       <label class="col-md-3 control-label" for="city">{{ trans('general.city') }}</label>
                       <div class="col-md-4">
-                          <input class="form-control" type="text" name="city" id="city" aria-label="city" value="{{ Input::old('city', $user->city) }}" />
+                          <input class="form-control" type="text" name="city" id="city" aria-label="city" value="{{ request()->old('city', $user->city) }}" />
                           {!! $errors->first('city', '<span class="alert-msg" aria-hidden="true">:message</span>') !!}
                       </div>
                   </div>
@@ -306,7 +305,7 @@
                   <div class="form-group{{ $errors->has('state') ? ' has-error' : '' }}">
                       <label class="col-md-3 control-label" for="state">{{ trans('general.state') }}</label>
                       <div class="col-md-4">
-                          <input class="form-control" type="text" name="state" id="state" value="{{ Input::old('state', $user->state) }}" maxlength="3" />
+                          <input class="form-control" type="text" name="state" id="state" value="{{ request()->old('state', $user->state) }}" maxlength="3" />
                           {!! $errors->first('state', '<span class="alert-msg" aria-hidden="true">:message</span>') !!}
                       </div>
                   </div>
@@ -315,7 +314,7 @@
                   <div class="form-group{{ $errors->has('country') ? ' has-error' : '' }}">
                       <label class="col-md-3 control-label" for="country">{{ trans('general.country') }}</label>
                       <div class="col-md-4">
-                          {!! Form::countries('country', Input::old('country', $user->country), 'select2') !!}
+                          {!! Form::countries('country', request()->old('country', $user->country), 'select2') !!}
                           {!! $errors->first('country', '<span class="alert-msg" aria-hidden="true">:message</span>') !!}
                       </div>
                   </div>
@@ -324,7 +323,7 @@
                   <div class="form-group{{ $errors->has('zip') ? ' has-error' : '' }}">
                       <label class="col-md-3 control-label" for="zip">{{ trans('general.zip') }}</label>
                       <div class="col-md-4">
-                          <input class="form-control" type="text" name="zip" id="zip" value="{{ Input::old('zip', $user->zip) }}" maxlength="10" />
+                          <input class="form-control" type="text" name="zip" id="zip" value="{{ request()->old('zip', $user->zip) }}" maxlength="10" />
                           {!! $errors->first('zip', '<span class="alert-msg" aria-hidden="true">:message</span>') !!}
                       </div>
                   </div>
@@ -378,11 +377,11 @@
                     <div class="col-md-9">
                         @if (config('app.lock_passwords'))
                             <div class="icheckbox disabled">
-                            {{ Form::checkbox('two_factor_optin', '1', Input::old('two_factor_optin', $user->two_factor_optin),['class' => 'minimal', 'disabled'=>'disabled']) }} {{ trans('admin/settings/general.two_factor_enabled_text') }}
+                            {{ Form::checkbox('two_factor_optin', '1', request()->old('two_factor_optin', $user->two_factor_optin),['class' => 'minimal', 'disabled'=>'disabled']) }} {{ trans('admin/settings/general.two_factor_enabled_text') }}
                                 <p class="help-block">{{ trans('general.feature_disabled') }}</p>
                             </div>
                         @else
-                            {{ Form::checkbox('two_factor_optin', '1', Input::old('two_factor_optin', $user->two_factor_optin),['class' => 'minimal']) }} {{ trans('admin/settings/general.two_factor_enabled_text') }}
+                            {{ Form::checkbox('two_factor_optin', '1', request()->old('two_factor_optin', $user->two_factor_optin),['class' => 'minimal']) }} {{ trans('admin/settings/general.two_factor_enabled_text') }}
                             <p class="help-block">{{ trans('admin/users/general.two_factor_admin_optin_help') }}</p>
 
                         @endif
@@ -412,7 +411,7 @@
                 <div class="form-group{!! $errors->has('notes') ? ' has-error' : '' !!}">
                   <label for="notes" class="col-md-3 control-label">{{ trans('admin/users/table.notes') }}</label>
                   <div class="col-md-8">
-                    <textarea class="form-control" id="notes" name="notes">{{ Input::old('notes', $user->notes) }}</textarea>
+                    <textarea class="form-control" id="notes" name="notes">{{ request()->old('notes', $user->notes) }}</textarea>
                     {!! $errors->first('notes', '<span class="alert-msg" aria-hidden="true"><i class="fa fa-times" aria-hidden="true"></i> :message</span>') !!}
                   </div>
                 </div>
@@ -468,7 +467,7 @@
                   <div class="col-sm-9">
                     <div class="checkbox">
                       <label for="email_user">
-                        {{ Form::checkbox('email_user', '1', Input::old('email_user'), array('id'=>'email_user','disabled'=>'disabled')) }}
+                        {{ Form::checkbox('email_user', '1', request()->old('email_user'), array('id'=>'email_user','disabled'=>'disabled')) }}
                         Email this user their credentials? <span class="help-text" id="email_user_warn">(Cannot send email. No user email address specified.)</span>
                       </label>
                     </div>

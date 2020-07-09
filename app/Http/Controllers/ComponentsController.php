@@ -13,7 +13,6 @@ use App\Models\Asset;
 use Auth;
 use Config;
 use DB;
-use Input;
 use Lang;
 use Mail;
 use Redirect;
@@ -144,16 +143,16 @@ class ComponentsController extends Controller
 
 
         // Update the component data
-        $component->name                   = Input::get('name');
-        $component->category_id            = Input::get('category_id');
-        $component->location_id            = Input::get('location_id');
-        $component->company_id             = Company::getIdForCurrentUser(Input::get('company_id'));
-        $component->order_number           = Input::get('order_number');
-        $component->min_amt                = Input::get('min_amt');
-        $component->serial                 = Input::get('serial');
-        $component->purchase_date          = Input::get('purchase_date');
+        $component->name                   = $request->input('name');
+        $component->category_id            = $request->input('category_id');
+        $component->location_id            = $request->input('location_id');
+        $component->company_id             = Company::getIdForCurrentUser($request->input('company_id'));
+        $component->order_number           = $request->input('order_number');
+        $component->min_amt                = $request->input('min_amt');
+        $component->serial                 = $request->input('serial');
+        $component->purchase_date          = $request->input('purchase_date');
         $component->purchase_cost          = request('purchase_cost');
-        $component->qty                    = Input::get('qty');
+        $component->qty                    = $request->input('qty');
 
         $component = $request->handleImages($component,600, public_path().'/uploads/components');
 
@@ -256,7 +255,7 @@ class ComponentsController extends Controller
         }
 
         $admin_user = Auth::user();
-        $asset_id = e(Input::get('asset_id'));
+        $asset_id = e($request->input('asset_id'));
 
       // Check if the user exists
         if (is_null($asset = Asset::find($asset_id))) {
@@ -271,11 +270,11 @@ class ComponentsController extends Controller
             'component_id' => $component->id,
             'user_id' => $admin_user->id,
             'created_at' => date('Y-m-d H:i:s'),
-            'assigned_qty' => Input::get('assigned_qty'),
+            'assigned_qty' => $request->input('assigned_qty'),
             'asset_id' => $asset_id
         ]);
 
-        $component->logCheckout(e(Input::get('note')), $asset);
+        $component->logCheckout(e($request->input('note')), $asset);
         return redirect()->route('components.index')->with('success', trans('admin/components/message.checkout.success'));
     }
 

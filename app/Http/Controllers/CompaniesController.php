@@ -2,7 +2,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
-use Input;
 use Lang;
 use Redirect;
 use View;

@@ -59,7 +59,7 @@
               {{ Form::label('name', trans('admin/hardware/form.name'), array('class' => 'col-md-3 control-label')) }}
               <div class="col-md-8">
                 <input class="form-control" type="text" name="name" aria-label="name" id="name"
-                value="{{ Input::old('name', $asset->name) }}"/>
+                value="{{ request()->old('name', $asset->name) }}"/>
                 {!! $errors->first('name', '<span class="alert-msg" aria-hidden="true"><i class="fa fa-times" aria-hidden="true"></i> :message</span>') !!}
               </div>
             </div>
@@ -81,7 +81,7 @@
               <div class="col-md-8">
               <div class="input-group col-md-5 required">
                 <div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd"  data-autoclose="true">
-                  <input type="text" class="form-control" placeholder="{{ trans('general.select_date') }}" name="checkin_at" id="checkin_at" value="{{ Input::old('checkin_at', date('Y-m-d')) }}">
+                  <input type="text" class="form-control" placeholder="{{ trans('general.select_date') }}" name="checkin_at" id="checkin_at" value="{{ request()->old('checkin_at', date('Y-m-d')) }}">
                   <span class="input-group-addon"><i class="fa fa-calendar" aria-hidden="true"></i></span>
                 </div>
                 {!! $errors->first('checkin_at', '<span class="alert-msg" aria-hidden="true"><i class="fa fa-times" aria-hidden="true"></i> :message</span>') !!}
@@ -97,7 +97,7 @@
 
                 <div class="col-md-8">
                   <textarea class="col-md-6 form-control" id="note"
-                  name="note">{{ Input::old('note', $asset->note) }}</textarea>
+                  name="note">{{ request()->old('note', $asset->note) }}</textarea>
                   {!! $errors->first('note', '<span class="alert-msg" aria-hidden="true"><i class="fa fa-times" aria-hidden="true"></i> :message</span>') !!}
                 </div>
               </div>

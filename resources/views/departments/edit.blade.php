@@ -3,7 +3,7 @@
     'updateText' => trans('admin/departments/table.update'),
     'helpTitle' => trans('admin/departments/table.about_locations_title'),
     'helpText' => trans('admin/departments/table.about_locations'),
-    'formAction' => ($item) ? route('departments.update', ['department' => $item->id]) : route('departments.store'),
+    'formAction' => ($item != null && $item->id != null) ? route('departments.update', ['department' => $item->id]) : route('departments.store'),
 ])
 
 {{-- Page content --}}

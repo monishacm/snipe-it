@@ -13,7 +13,6 @@ use App\Models\Setting;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\View;
-use Input;
 use League\Csv\Reader;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Illuminate\Http\Request;
@@ -465,7 +464,7 @@ class ReportsController extends Controller
 
 
             foreach ($customfields as $customfield) {
-                if (e(Input::get($customfield->db_column_name())) == '1') {
+                if (e($request->input($customfield->db_column_name())) == '1') {
                     $header[] = $customfield->name;
                 }
             }

@@ -63,7 +63,7 @@
                             </div> <!-- end row -->
                         </div>
                         <div class="box-footer">
-                            <button class="btn btn-lg btn-primary btn-block">{{ trans('auth/general.login')  }}</button>
+                            <button class="btn btn-lg btn-success btn-block">{{ trans('auth/general.login')  }}</button>
                         </div>
                         <div class="col-md-12 col-sm-12 col-xs-12 text-right" style="padding-top: 10px;">
                             @if ($snipeSettings->custom_forgot_pass_url)

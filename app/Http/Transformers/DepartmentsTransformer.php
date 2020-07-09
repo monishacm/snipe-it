@@ -3,14 +3,12 @@ namespace App\Http\Transformers;
 
 use App\Models\Department;
 use Illuminate\Database\Eloquent\Collection;
-use Gate;
 use App\Helpers\Helper;
+use Illuminate\Support\Facades\Gate;
 
-class DepartmentsTransformer
+class DepartmentsTransformer 
 {
-
-    public function transformDepartments (Collection $departments, $total)
-    {
+    public function transformDepartments (Collection $departments, $total) {
         $array = array();
         foreach ($departments as $department) {
             $array[] = self::transformDepartment($department);
@@ -18,10 +16,8 @@ class DepartmentsTransformer
         return (new DatatablesTransformer)->transformDatatables($array, $total);
     }
 
-    public function transformDepartment (Department $department = null)
-    {
+    public function transformDepartment (Department $department = null) {
         if ($department) {
-
             $array = [
                 'id' => (int) $department->id,
                 'name' => e($department->name),
@@ -45,19 +41,13 @@ class DepartmentsTransformer
                 'updated_at' => Helper::getFormattedDateObject($department->updated_at, 'datetime'),
             ];
 
-            $permissions_array['available_actions'] = [
+            $array['available_actions'] = [
                 'update' => Gate::allows('update', Department::class) ? true : false,
                 'delete' => (Gate::allows('delete', Department::class) && ($department->users_count==0) && ($department->deleted_at=='')) ? true : false,
             ];
 
-            $array += $permissions_array;
-
             return $array;
         }
-
-
     }
-
-
 
 }

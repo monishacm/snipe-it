@@ -20,7 +20,6 @@ use Config;
 use DB;
 use Gate;
 use Illuminate\Http\Request;
-use Input;
 use Lang;
 use Log;
 use Mail;
@@ -90,7 +89,7 @@ class AssetsController extends Controller
 
         $all_custom_fields = CustomField::all(); //used as a 'cache' of custom fields throughout this page load
         foreach ($all_custom_fields as $field) {
-            $allowed_columns[]=$field->db_column_name();
+            $allowed_columns[] = $field->db_column_name();
         }
 
         $assets = Company::scopeCompanyables(Asset::select('assets.*'),"company_id","assets")
@@ -699,8 +698,8 @@ class AssetsController extends Controller
             $asset->location_id =  $request->input('location_id');
         }
 
-        if (Input::has('status_id')) {
-            $asset->status_id =  Input::get('status_id');
+        if ($request->has('status_id')) {
+            $asset->status_id =  $request->input('status_id');
         }
 
         if ($asset->save()) {
@@ -755,11 +754,6 @@ class AssetsController extends Controller
         }
 
         return response()->json(Helper::formatStandardApiResponse('error', ['asset_tag'=> e($request->input('asset_tag'))], 'Asset with tag '.$request->input('asset_tag').' not found'));
-
-
-
-
-
     }
 
 

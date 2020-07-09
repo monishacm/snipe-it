@@ -5,9 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 use Schema;
 use Watson\Validating\ValidatingTrait;
 use App\Http\Traits\UniqueUndeletedTrait;
-use ForceUTF8\Encoding;
 use EasySlugger\Utf8Slugger;
-use Patchwork\Utf8;
 use Illuminate\Validation\Rule;
 
 class CustomField extends Model
@@ -82,8 +80,8 @@ class CustomField extends Model
      */
     public static function boot()
     {
+        parent::boot();
         self::created(function ($custom_field) {
-
             // Column already exists on the assets table - nothing to do here.
             // This *shouldn't* happen in the wild.
             if (Schema::hasColumn(CustomField::$table_name, $custom_field->convertUnicodeDbSlug())) {
@@ -258,7 +256,6 @@ class CustomField extends Model
         }
         return false;
     }
-
 
     /**
      * Convert non-UTF-8 or weirdly encoded text into something that

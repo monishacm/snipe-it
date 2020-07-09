@@ -10,7 +10,6 @@ use Auth;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
-use Input;
 use Lang;
 use Redirect;
 use Str;
