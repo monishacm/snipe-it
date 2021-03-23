@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use App\Models\User;
 use Carbon\Carbon;
 
+
 class MergeUsersByUsername extends Command
 {
     /**
@@ -53,7 +54,10 @@ class MergeUsersByUsername extends Command
                 foreach ($bad_user->assets as $asset) {
                     $this->info( 'Updating asset '.$asset->asset_tag.' '.$asset->id.' to user '.$user->id);
                     $asset->assigned_to = $user->id;
-                    $asset->save();
+                    if (!$asset->save()) {
+                        $this->error( 'Could not update assigned_to field on asset '.$asset->asset_tag.' '.$asset->id.' to user '.$user->id);
+                        $this->error( 'Error saving: '.$asset->getErrors());
+                    }
                 }
 
                 // Walk the list of licenses
@@ -97,7 +101,12 @@ class MergeUsersByUsername extends Command
                 $this->info( 'Marking the user as deleted');
                 $bad_user->deleted_at = Carbon::now()->timestamp;
                 $bad_user->save();
+
+
             }
+
         }
+
+
     }
 }
