@@ -60,7 +60,8 @@ class UsersController extends Controller
             'users.zip',
 
         ])->with('manager', 'groups', 'userloc', 'company', 'department','assets','licenses','accessories','consumables')
-            ->withCount('assets as assets_count','licenses as licenses_count','accessories as accessories_count','consumables as consumables_count');
+          ->withCount('assets as assets_count','licenses as licenses_count','accessories as accessories_count','consumables as consumables_count')
+          ->where('show_in_list', '=', '1');
         $users = Company::scopeCompanyables($users);
 
 

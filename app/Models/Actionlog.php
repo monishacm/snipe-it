@@ -2,7 +2,6 @@
 namespace App\Models;
 use App\Models\Traits\Searchable;
 use App\Presenters\Presentable;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Response;

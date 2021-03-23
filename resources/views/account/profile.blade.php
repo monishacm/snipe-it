@@ -81,15 +81,10 @@
         <!-- Gravatar Email -->
         <div class="form-group {{ $errors->has('gravatar') ? ' has-error' : '' }}">
           <label for="gravatar" class="col-md-3 control-label">{{ trans('general.gravatar_email') }}
-            <small>(Private)</small>
           </label>
           <div class="col-md-8">
             <input class="form-control" type="text" name="gravatar" id="gravatar" value="{{ request()->old('gravatar', $user->gravatar) }}" />
             {!! $errors->first('gravatar', '<span class="alert-msg" aria-hidden="true"><i class="fa fa-times" aria-hidden="true"></i> :message</span>') !!}
-            <p>
-              <img src="//secure.gravatar.com/avatar/{{ md5(strtolower(trim($user->gravatar))) }}" width="30" height="30" alt="{{ $user->present()->fullName() }} avatar image">
-              <a href="http://gravatar.com"><small>Change your avatar at Gravatar.com</small></a>.
-            </p>
           </div>
         </div>
 

@@ -592,6 +592,7 @@ class AssetsController extends Controller
      */
     public function checkout(AssetCheckoutRequest $request, $asset_id)
     {
+        Log::info($request);
         $this->authorize('checkout', Asset::class);
         $asset = Asset::findOrFail($asset_id);
 
@@ -631,13 +632,9 @@ class AssetsController extends Controller
             $error_payload['target_type'] = 'user';
         }
 
-
-
         if (!isset($target)) {
             return response()->json(Helper::formatStandardApiResponse('error', $error_payload, 'Checkout target for asset '.e($asset->asset_tag).' is invalid - '.$error_payload['target_type'].' does not exist.'));
         }
-
-
 
         $checkout_at = request('checkout_at', date("Y-m-d H:i:s"));
         $expected_checkin = request('expected_checkin', null);

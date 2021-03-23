@@ -421,7 +421,7 @@
                       <label class="col-md-3 control-label" for="groups[]"> {{ trans('general.groups') }}</label>
                       <div class="col-md-5">
 
-                          @if ((Config::get('app.lock_passwords') || (!Auth::user()->isSuperUser())))
+                          @if (Config::get('app.lock_passwords'))
 
                               @if (count($userGroups->keys()) > 0)
                                   <ul>
@@ -479,12 +479,6 @@
           </div><!-- /.tab-pane -->
 
           <div class="tab-pane" id="tab_2">
-            <div class="col-md-12">
-              @if (!Auth::user()->isSuperUser())
-                <p class="alert alert-warning">Only superadmins may grant a user superadmin access.</p>
-              @endif
-            </div>
-
             <table class="table table-striped permissions">
               <thead>
                 <tr class="permissions-row">
@@ -498,8 +492,14 @@
 
               @foreach ($permissions as $area => $permissionsArray)
               @if (count($permissionsArray) == 1)
-                <?php $localPermission = $permissionsArray[0]; ?>
-                <tr class="header-row permissions-row">
+                <?php 
+                $localPermission = $permissionsArray[0];
+                $hide = "";
+                if(!Auth::user()->isSuperUser() && $localPermission['label'] == "Super User") {
+                    $hide = "hide";
+                }
+                ?>
+                <tr class="header-row permissions-row {{ $hide }}">
                   <td class="col-md-5 tooltip-base permissions-item"
                     data-toggle="tooltip"
                     data-placement="right"
