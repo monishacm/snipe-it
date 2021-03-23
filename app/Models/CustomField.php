@@ -6,7 +6,6 @@ use Schema;
 use Watson\Validating\ValidatingTrait;
 use App\Http\Traits\UniqueUndeletedTrait;
 use EasySlugger\Utf8Slugger;
-use Illuminate\Validation\Rule;
 
 class CustomField extends Model
 {
@@ -43,7 +42,19 @@ class CustomField extends Model
         'help_text',
         'show_in_email',
     ];
-
+    
+    protected $rules = array(
+        "name" => "required|unique:custom_fields",
+        "element" => [
+            "required",
+            //Rule::in(['text', 'listbox'])
+        ],
+        //'format' => [
+        //    Rule::in(array_merge(array_keys(CustomField::$PredefinedFormats), CustomField::$PredefinedFormats))
+       //],
+        'field_encrypted' => "nullable|boolean"
+    );
+    
     // This is confusing, since it's actually the custom fields table that
     // we're usually modifying, but since we alter the assets table, we have to
     // say that here, otherwise the new fields get added onto the custom fields
